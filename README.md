@@ -4,10 +4,12 @@
 ## WDMS 
 Used technologies:
 
-Backend: Laravel 10
+Backend: Laravel 10 
+[(Backend GITHUB)](https://github.com/SmanSayeed/wallet_backend)
+
 
 Frontend: Next JS 14
-[(Frontend GITHUB)]()
+[(Frontend GITHUB)](https://github.com/SmanSayeed/wallet-frontend)
 
 Database: MySQL
 
