@@ -15,12 +15,12 @@ export default function Home() {
             <h4>Welcome to wallet denomination management system</h4>
 
             <div className=" col-md-8 mx-auto d-flex justify-content-center align-items-center border rounded p-4 gap-5 my-2">
-            <Link href="/login">
+            <Link href="/auth/login">
               <DButton variant="success" size="md">
                 Login
               </DButton>
             </Link>
-            <Link href="/reg">
+            <Link href="/auth/reg">
               <DButton variant="success" size="md">
                 Registraion
               </DButton>

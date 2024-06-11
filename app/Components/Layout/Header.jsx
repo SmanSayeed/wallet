@@ -21,12 +21,12 @@ const Navbar = () => {
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav ms-auto">
             <li className="nav-item">
-              <Link href="/login">
+              <Link href="/auth/login">
                 <span className="nav-link">Login</span>
               </Link>
             </li>
             <li className="nav-item">
-              <Link href="/reg">
+              <Link href="/auth/reg">
                 <span className="nav-link">Registration</span>
               </Link>
             </li>
