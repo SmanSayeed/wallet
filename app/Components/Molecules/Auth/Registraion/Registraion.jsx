@@ -1,11 +1,12 @@
 'use client'
 import React, { useState } from 'react';
-import axios from 'axios';
-import { authApi } from '@/app/lib/ApiEndpoint';
+import { useRegisterMutation } from '@/app/services/authApi';
 import AuthLayout from '../AuthLayout';
 import Alert from '@/app/Components/Atoms/Alert/Alert';
+import { useRouter } from 'next/navigation';
 
 const RegistrationForm = () => {
+  const [showAlert,setShowAlert] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -22,9 +23,12 @@ const RegistrationForm = () => {
     status:true,
   });
 
-  const [errors, setErrors] = useState({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [showAlert, setShowAlert] = useState(false);
+  const [errors,setErrors] = useState([]);
+
+  const [isSubmitting,setIsSubmitting] = useState(false);
+
+  const [register, { isLoading, isSuccess, isError, error }] = useRegisterMutation();
+  const router = useRouter();
 
   const handleChange = (e) => {
     setShowAlert(false);
@@ -35,30 +39,49 @@ const RegistrationForm = () => {
     }));
   };
 
+//  catch (error) {
+//       console.log("error",error)
+//       if (error.response && error.response.data.data) {
+//         setErrors(error.response.data.data);
+//         console.log("error",error.response.data.data)
+   
+//   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-    setErrors({});
-
     try {
-      const response = await axios.post(authApi.register, formData,{
-        headers:{
-          Accept:'application/json'
-        }
-      });
-      setShowAlert(true);
-      console.log(response.data);
-      // Handle successful registration (e.g., redirect to login page)
-    } catch (error) {
-      console.log("error",error)
-      if (error.response && error.response.data.data) {
-        setErrors(error.response.data.data);
-        console.log("error",error.response.data.data)
+      const response = await register(formData).unwrap();
+   
+      if (response.success) {
+        setShowAlert(true);
+        setErrors([])
+        // Clear form data if registration is successful
+        setFormData({
+          name: '',
+          email: '',
+          password: '',
+          password_confirmation: '',
+          phone: '',
+          address: '',
+          country: '',
+          post_code: '',
+          nid: '',
+        });
+        // Redirect to login page or wherever necessary
+        // router.push('/login');
       }
-    } finally {
+    } catch (err) {
       setIsSubmitting(false);
+      if (err.data && err.data.data) {
+        setErrors(err.data.data); 
+      } else {
+        console.error('Failed to register: ', err);
+      }
     }
   };
+
+
 
 
   const handleClose = () => {
@@ -67,7 +90,7 @@ const RegistrationForm = () => {
 
   return (
     <AuthLayout>
-<div className="container my-5 shadow-lg border rounded p-3">
+    <div className="container my-5 shadow-lg border rounded p-3">
       <h2>Register</h2>
       {showAlert && (
         <Alert

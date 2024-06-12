@@ -1,9 +1,10 @@
 'use client';
 import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useRouter } from 'next/router';
+import { useDispatch } from 'react-redux';
+import { useRouter } from 'next/navigation'
+import { useLoginMutation } from '@/app/services/authApi';
+import { setCredentials } from '@/app/redux/features/auth/authSlice';
 import AuthLayout from '../AuthLayout';
-import { login } from '../features/auth/authSlice';
 
 const LoginForm = () => {
   const [formData, setFormData] = useState({
@@ -12,8 +13,8 @@ const LoginForm = () => {
   });
 
   const dispatch = useDispatch();
-  const router = useRouter();
-  const { status, error } = useSelector((state) => state.auth);
+ const router = useRouter();
+  const [login, { isLoading }] = useLoginMutation();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -25,9 +26,12 @@ const LoginForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const result = await dispatch(login(formData));
-    if (result.type === 'auth/login/fulfilled') {
+    try {
+      const user = await login(formData).unwrap();
+      dispatch(setCredentials(user));
       router.push('/otp');
+    } catch (err) {
+      console.error('Failed to login: ', err);
     }
   };
 
@@ -58,9 +62,8 @@ const LoginForm = () => {
               onChange={handleChange}
             />
           </div>
-          {status === 'failed' && <div className="alert alert-danger">{error}</div>}
-          <button type="submit" className="btn btn-primary" disabled={status === 'loading'}>
-            {status === 'loading' ? 'Logging in...' : 'Login'}
+          <button type="submit" className="btn btn-primary" disabled={isLoading}>
+            {isLoading ? 'Logging in...' : 'Login'}
           </button>
         </form>
       </div>

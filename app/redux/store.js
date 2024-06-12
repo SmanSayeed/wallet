@@ -1,7 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 import authReducer from './features/auth/authSlice';
-import logger from 'redux-logger';
-import Env from '../lib/Env';
+import { authApi } from '../services/authApi';
 
 // const store = configureStore({
  
@@ -15,12 +14,10 @@ import Env from '../lib/Env';
 export const makeStore = () => {
   return configureStore({
     reducer: {
+      [authApi.reducerPath]: authApi.reducer,
       auth: authReducer,
     },
-    middleware:[
-  
-    ],
-    devTools:Env.NODE_ENV !== 'production'
-  //   middleware:(getDefaultMiddleware)=>getDefaultMiddleware().concat(logger)
+    middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware().concat(authApi.middleware),
   })
 }
