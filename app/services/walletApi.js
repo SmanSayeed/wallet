@@ -1,4 +1,3 @@
-// services/walletApi.js
 
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { SERVER_ENDPOINT } from '../lib/ApiEndpoint';
@@ -18,19 +17,22 @@ export const walletApi = createApi({
   }),
   endpoints: (builder) => ({
     getWallets: builder.query({
-      query: () => '/v1/wallets',
+      query: () => '/wallets',
     }),
     createWallet: builder.mutation({
       query: (newWallet) => ({
-        url: '/v1/wallets',
+        url: '/wallets',
         method: 'POST',
         body: newWallet,
       }),
     }),
     getWalletById: builder.query({
-      query: (walletId) => `/v1/wallets/${walletId}`,
+      query: (walletId) => `/wallets/${walletId}`,
     }),
+    getCurrencies: builder.query({
+        query: () => '/currencies',
+      }),
   }),
 });
 
-export const { useGetWalletsQuery, useCreateWalletMutation, useGetWalletByIdQuery } = walletApi;
+export const { useGetWalletsQuery, useCreateWalletMutation, useGetWalletByIdQuery,useGetCurrenciesQuery } = walletApi;

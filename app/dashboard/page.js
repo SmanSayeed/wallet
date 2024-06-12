@@ -4,6 +4,8 @@ import { useGetUserDetailsQuery } from '../services/authApi';
 import { useSelector } from 'react-redux';
 import Layout from '../Components/Layout/Layout';
 import AuthLayout from '../Components/Molecules/Auth/AuthLayout';
+import DButton from '../Components/Atoms/DButton';
+import Link from 'next/link';
 
 const Dashboard = () => {
   // const { user } = useSelector((state) => state.auth);
@@ -25,9 +27,14 @@ const Dashboard = () => {
       <p>Email: {user.data.email}</p> 
       <p>Phone: {user.data.phone}</p>
 
-      
-
       </div>
+      <div className='d-flex justify-content-center align-items-center flex-column shadow-lg p-3 m-3 border rounded'>
+            <Link href="/wallet">
+              <DButton variant="success" size="md">
+                Wallet
+              </DButton>
+              </Link>
+        </div>
    
     </AuthLayout>
      
