@@ -1,36 +1,42 @@
-import Link from 'next/link';
+'use client';
+import { useDispatch, useSelector } from 'react-redux';
+import { removeCookie } from '@/app/utils/cookieUtils';
+import { useRouter } from 'next/navigation';
+import { logout } from '@/app/redux/features/auth/authSlice';
 
-const Navbar = () => {
+const Header = () => {
+  const router = useRouter();
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.auth.user);
+
+  const handleLogout = () => {
+    dispatch(logout());
+    removeCookie('user');
+    router.push('/auth/login');
+  };
+
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
       <div className="container">
-        <Link href="/">
-          <span className="navbar-brand">WDMS</span>
-        </Link>
-        <button
-          className="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarNav"
-          aria-controls="navbarNav"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <span className="navbar-toggler-icon"></span>
-        </button>
-        <div className="collapse navbar-collapse" id="navbarNav">
+        <span className="navbar-brand" onClick={() => router.push('/')}>WDMS</span>
+        <div className="navbar-collapse" id="navbarNav">
           <ul className="navbar-nav ms-auto">
-            <li className="nav-item">
-              <Link href="/auth/login">
-                <span className="nav-link">Login</span>
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link href="/auth/reg">
-                <span className="nav-link">Registration</span>
-              </Link>
-            </li>
-           
+            {!user ? (
+              <>
+                <li className="nav-item">
+                  <span className="nav-link" onClick={() => router.push('/auth/login')}>Login</span>
+                </li>
+                <li className="nav-item">
+                  <span className="nav-link" onClick={() => router.push('/auth/reg')}>Registration</span>
+                </li>
+              </>
+            ) : (
+              <li className="nav-item">
+                <button className="nav-link btn btn-link" onClick={handleLogout}>
+                  Logout
+                </button>
+              </li>
+            )}
           </ul>
         </div>
       </div>
@@ -38,4 +44,4 @@ const Navbar = () => {
   );
 };
 
-export default Navbar;
+export default Header;

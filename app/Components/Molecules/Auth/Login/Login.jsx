@@ -1,10 +1,13 @@
 'use client';
+
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { useRouter } from 'next/navigation'
 import { useLoginMutation } from '@/app/services/authApi';
 import { setCredentials } from '@/app/redux/features/auth/authSlice';
 import AuthLayout from '../AuthLayout';
+import Alert from '@/app/Components/Atoms/Alert/Alert';
+import { useRouter } from 'next/navigation';
+import { setCookie } from '@/app/utils/cookieUtils';
 
 const LoginForm = () => {
   const [formData, setFormData] = useState({
@@ -12,9 +15,12 @@ const LoginForm = () => {
     password: '',
   });
 
+  const [error, setError] = useState(null); // State to store login error
   const dispatch = useDispatch();
- const router = useRouter();
+  const router = useRouter();
   const [login, { isLoading }] = useLoginMutation();
+
+  
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -27,11 +33,24 @@ const LoginForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const user = await login(formData).unwrap();
-      dispatch(setCredentials(user));
-      router.push('/otp');
+      const response = await login(formData).unwrap();
+      console.log(response)
+      const { user, token } = response.data; // Extract user data and token from the response
+      dispatch(setCredentials({ user, token }));
+      router.push('/auth/otp');
     } catch (err) {
-      console.error('Failed to login: ', err);
+   
+      if(err.status===401){
+        console.log(err.data.message)
+        setError(err.data.message)
+      }
+
+      if (err.data && err.data.data) {
+        
+        setError(err.data.data); // Set the first error message
+      } else {
+        console.error('Failed to login: ', err);
+      }
     }
   };
 
@@ -39,6 +58,7 @@ const LoginForm = () => {
     <AuthLayout>
       <div className="container my-5 shadow-lg border rounded p-3">
         <h2>Login</h2>
+        {error && <Alert message={error} variant="danger" dismissible={true} />}
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
             <label htmlFor="email" className="form-label">Email</label>

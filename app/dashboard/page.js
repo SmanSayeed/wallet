@@ -1,23 +1,38 @@
-'use client'
+'use client';
 import React from 'react';
+import { useGetUserDetailsQuery } from '../services/authApi';
 import { useSelector } from 'react-redux';
-import { useRouter } from 'next/router';
+import Layout from '../Components/Layout/Layout';
+import AuthLayout from '../Components/Molecules/Auth/AuthLayout';
 
 const Dashboard = () => {
-  const { user, token, otpValidated } = useSelector((state) => state.auth);
-  const router = useRouter();
+  // const { user } = useSelector((state) => state.auth);
+  const { data:user, error, isLoading } = useGetUserDetailsQuery();
 
-  React.useEffect(() => {
-    if (!token || !otpValidated) {
-      router.push('/');
-    }
-  }, [token, otpValidated, router]);
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error.message}</div>;
+  }
 
   return (
-    <div className="container my-5">
-      <h1>Welcome to the Dashboard</h1>
-      <p>User: {user?.name}</p>
-    </div>
+    <>
+    <AuthLayout>
+      <div className='d-flex justify-content-center align-items-center flex-column shadow-lg p-3 m-3 border rounded'>
+      <h4>Welcome , {user.data.name}</h4>
+      <p>Email: {user.data.email}</p> 
+      <p>Phone: {user.data.phone}</p>
+
+      
+
+      </div>
+   
+    </AuthLayout>
+     
+      {/* Render other user details */}
+    </>
   );
 };
 

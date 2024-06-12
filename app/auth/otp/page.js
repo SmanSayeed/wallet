@@ -1,15 +1,15 @@
 'use client';
 import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useRouter } from 'next/router';
-import { validateOtp } from '../features/auth/authSlice';
-import AuthLayout from '../AuthLayout';
-
+import { useValidateOtpMutation } from '@/app/services/authApi';
+import AuthLayout from '@/app/Components/Molecules/Auth/AuthLayout';
+import { useRouter } from 'next/navigation';
+import { useSelector } from 'react-redux';
+useSelector
 const OtpForm = () => {
   const [otp, setOtp] = useState('');
-  const dispatch = useDispatch();
   const router = useRouter();
-  const { status, error } = useSelector((state) => state.auth);
+  const { user } = useSelector((state) => state.auth); // Get user data from Redux
+  const [validateOtpMutation, { isLoading }] = useValidateOtpMutation(); // Use validateOtpMutation hook
 
   const handleChange = (e) => {
     setOtp(e.target.value);
@@ -17,14 +17,16 @@ const OtpForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const result = await dispatch(validateOtp({ otp }));
-    if (result.type === 'auth/validateOtp/fulfilled') {
+    try {
+      await validateOtpMutation({ otp, email: user.email }); // Call validateOtpMutation with OTP and user email
       router.push('/dashboard');
+    } catch (err) {
+      console.error('Failed to validate OTP: ', err);
     }
   };
 
   return (
-    <AuthLayout>
+    <>
       <div className="container my-5 shadow-lg border rounded p-3">
         <h2>OTP Validation</h2>
         <form onSubmit={handleSubmit}>
@@ -39,13 +41,12 @@ const OtpForm = () => {
               onChange={handleChange}
             />
           </div>
-          {status === 'failed' && <div className="alert alert-danger">{error}</div>}
-          <button type="submit" className="btn btn-primary" disabled={status === 'loading'}>
-            {status === 'loading' ? 'Validating...' : 'Submit'}
+          <button type="submit" className="btn btn-primary" disabled={isLoading}>
+            {isLoading ? 'Validating...' : 'Submit'}
           </button>
         </form>
       </div>
-    </AuthLayout>
+    </>
   );
 };
 
