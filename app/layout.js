@@ -16,7 +16,9 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <StoreProvider>
-      <body className={inter.className}>
+
+      
+      <body className={inter.className} suppressHydrationWarning={true}>
         <Header/>
         {/* <Provider store={store}> */}
           {children}            
