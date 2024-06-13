@@ -25,6 +25,9 @@ const Header = () => {
     removeCookie('user');
     router.push('/auth/login');
   };
+  const handleWallet = () => {
+    router.push('/wallet');
+  };
 
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -42,9 +45,15 @@ const Header = () => {
                 </li>
               </>
             ) : (
+              <>
+               <li className="nav-item">
+                <button className="nav-link btn btn-link" onClick={handleWallet}>Wallet</button>
+              </li>
               <li className="nav-item">
                 <button className="nav-link btn btn-link" onClick={handleLogout}>Logout</button>
               </li>
+              </>
+           
             )}
           </ul>
         </div>
