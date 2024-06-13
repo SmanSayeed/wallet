@@ -1,9 +1,10 @@
-import { removeCookie, setCookie } from '@/app/utils/cookieUtils';
 import { createSlice } from '@reduxjs/toolkit';
+import { setCookie, removeCookie } from '@/app/utils/cookieUtils';
 
 const initialState = {
   user: null,
   token: null,
+  email: null,
   otpValidated: false,
 };
 
@@ -11,12 +12,15 @@ const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
+    setEmail: (state, action) => {
+      state.email = action.payload;
+    },
     setCredentials: (state, action) => {
       const { user, token } = action.payload;
       state.user = user;
       state.token = token;
-      setCookie('access_token', token, { expires: 7 }); 
-      setCookie('user', JSON.stringify(user), { expires: 7 }); 
+      if (token) setCookie('access_token', token, { expires: 7 });
+      if (user) setCookie('user', JSON.stringify(user), { expires: 7 });
     },
     setUser: (state, action) => {
       state.user = action.payload;
@@ -24,6 +28,7 @@ const authSlice = createSlice({
     logout: (state) => {
       state.user = null;
       state.token = null;
+      state.email = null;
       state.otpValidated = false;
       removeCookie('access_token');
       removeCookie('user');
@@ -34,9 +39,22 @@ const authSlice = createSlice({
     setToken(state, action) {
       state.token = action.payload;
     },
-    reset: () => initialState,
+    reset: (state) => initialState,
+    initAuthState: (state) => {
+      const user = getCookie('user');
+      const token = getCookie('access_token');
+      if (user && token) {
+        state.user = JSON.parse(user);
+        state.token = token;
+      } else {
+        state.user = null;
+        state.token = null;
+        state.otpValidated = false;
+      }
+    },
   },
+ 
 });
 
-export const { setCredentials, validateOtp, logout,setUser,setToken,reset } = authSlice.actions;
+export const { setEmail, setCredentials, validateOtp, logout, setUser, setToken, reset, initAuthState } = authSlice.actions;
 export default authSlice.reducer;

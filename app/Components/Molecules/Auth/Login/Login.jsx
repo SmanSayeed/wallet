@@ -1,13 +1,11 @@
 'use client';
-
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useLoginMutation } from '@/app/services/authApi';
-import { setCredentials } from '@/app/redux/features/auth/authSlice';
+import { useRouter } from 'next/navigation';
 import AuthLayout from '../AuthLayout';
 import Alert from '@/app/Components/Atoms/Alert/Alert';
-import { useRouter } from 'next/navigation';
-import { setCookie } from '@/app/utils/cookieUtils';
+import { setCredentials } from '@/app/redux/features/auth/authSlice';
 
 const LoginForm = () => {
   const [formData, setFormData] = useState({
@@ -19,8 +17,6 @@ const LoginForm = () => {
   const dispatch = useDispatch();
   const router = useRouter();
   const [login, { isLoading }] = useLoginMutation();
-
-  
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -34,20 +30,15 @@ const LoginForm = () => {
     e.preventDefault();
     try {
       const response = await login(formData).unwrap();
-      console.log(response)
-      const { user, token } = response.data; // Extract user data and token from the response
+      const { user, token } = response; // Extract user data and token from the response
       dispatch(setCredentials({ user, token }));
       router.push('/auth/otp');
     } catch (err) {
-   
-      if(err.status===401){
-        console.log(err.data.message)
-        setError(err.data.message)
-      }
-
-      if (err.data && err.data.data) {
-        
-        setError(err.data.data); // Set the first error message
+      if (err.status === 401) {
+        console.log(err.data.message);
+        setError(err.data.message);
+      } else if (err.data && err.data.message) {
+        setError(err.data.message); // Set the error message
       } else {
         console.error('Failed to login: ', err);
       }
