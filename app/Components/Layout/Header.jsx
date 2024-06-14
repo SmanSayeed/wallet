@@ -47,7 +47,7 @@ const Header = () => {
             ) : (
               <>
                <li className="nav-item">
-                <button className="nav-link btn btn-link" onClick={handleWallet}>Wallet</button>
+                <button className="nav-link btn btn-link" onClick={handleWallet}>Wallets</button>
               </li>
               <li className="nav-item">
                 <button className="nav-link btn btn-link" onClick={handleLogout}>Logout</button>

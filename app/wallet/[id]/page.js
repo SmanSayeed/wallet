@@ -17,6 +17,7 @@ import Alert from '@/app/Components/Atoms/Alert/Alert';
 import Spinner from 'react-bootstrap/Spinner';
 import DenominationForm from '@/app/Components/Molecules/DenominationForm/DenominationForm';
 import DenominationList from '@/app/Components/Molecules/DenominationList/DenominationList';
+import WalletInfo from '@/app/Components/Molecules/WalletInfo/WalletInfo';
 
 const WalletDetails = ({ params }) => {
     const { id } = params;
@@ -137,25 +138,14 @@ const WalletDetails = ({ params }) => {
                 <Alert message="Failed to fetch wallet details" variant="danger" />
             ) : (
                 <>
-                    {walletData && (
-                        <div className="card mb-4">
-                            <div className="card-body">
-                                <h3 className="card-title">{walletData.name}</h3>
-                                <p className="card-subtitle mb-2 text-muted">
-                                    Currency: {currencyName} {currencySymbol}
-                                </p>
-                                <p className="card-text">Balance: {walletData.balance}</p>
-                            </div>
-                        </div>
-                    )}
+                <div className="row border rounded shadow-lg p-2">
+                  <div className='col-md-6'>
+                    <div className='row'>
+                    <div className='col-md-12'>
+                      <WalletInfo userName={userData?.name} walletName={walletData.name} currencySymbol={currencySymbol} walletBalance={walletData.balance} />
+                    </div>
+                    <div className='col-md-12'>
 
-                    <DenominationForm 
-                        denominations={denominations}
-                        denominationRecord={denominationRecord}
-                        handleInputChange={handleInputChange}
-                        handleSubmit={handleSubmit}
-                        submitting={submitting}
-                    />
                     {error && <Alert message={error} variant="danger" />}
 
                     <DenominationList 
@@ -165,6 +155,23 @@ const WalletDetails = ({ params }) => {
                         userData={userData && userData}
                         walletData={walletData && walletData}
                     />
+                    </div>
+                    
+                    </div>
+                  </div>
+                  <div className='col-md-6'>
+                  <DenominationForm 
+                        denominations={denominations}
+                        denominationRecord={denominationRecord}
+                        handleInputChange={handleInputChange}
+                        handleSubmit={handleSubmit}
+                        submitting={submitting}
+                    />
+                    </div>
+                </div>
+                  
+
+                   
                 </>
             )}
         </div>
