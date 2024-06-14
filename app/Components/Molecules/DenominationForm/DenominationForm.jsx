@@ -16,8 +16,8 @@ const DenominationForm = ({ denominations, denominationRecord, handleInputChange
                         required
                     >
                         <option value="">Select Denomination</option>
-                        {denominations.map((d) => (
-                            <option key={d.id} value={d.id}>
+                        {denominations.map((d,index) => (
+                            <option key={index} value={d.id}>
                                 {d.title} - {d.amount}
                             </option>
                         ))}

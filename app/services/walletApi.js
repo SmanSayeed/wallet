@@ -56,9 +56,10 @@ export const walletApi = createApi({
       }),
     }),
     removeDenomination: builder.mutation({
-      query: () => ({
+      query: (detachData) => ({
         url: `/wallets/detach-denomination`,
-        method: 'DELETE',
+        method: 'POST',
+        body: detachData,
       }),
     }),
   }),
