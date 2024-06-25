@@ -19,9 +19,25 @@ export const transactionApi = createApi({
     getTransactions: builder.query({
       query: () => "/transactions",
     }),
+    makeDepositAndSendOtp: builder.mutation({
+      query: (payload) => ({
+        url: "/make-deposit-and-send-otp",
+        method: "POST",
+        body: payload,
+      }),
+    }),
+    verifyTransactionOtp: builder.mutation({
+      query: (payload) => ({
+        url: "/verify-transaction-otp",
+        method: "POST",
+        body: payload,
+      }),
+    }),
   }),
 });
 
 export const {
   useGetTransactionsQuery,
+  useMakeDepositAndSendOtpMutation,
+  useVerifyTransactionOtpMutation,
 } = transactionApi;
