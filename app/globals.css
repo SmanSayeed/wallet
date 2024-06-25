@@ -1,2 +1,14 @@
 
 @import "~bootstrap/dist/css/bootstrap.min.css";
+
+.wallet-height{
+    height: 200px;
+}
+
+.deposit-style{
+    background:#ccc;
+}
+
+.deposit-now-btn{
+    height: 30px;
+}

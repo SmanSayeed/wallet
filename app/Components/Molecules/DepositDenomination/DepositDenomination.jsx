@@ -1,31 +1,27 @@
 import React from 'react';
 
-const DenominationList = ({ denominationsData, handleRemoveDenomination, currencySymbol,userData,walletData,handleAddToDeposit }) => {
+const DepositDenomination = ({ depositList, currencySymbol,userData,walletData,handleRemoveDeposit }) => {
     return (
-        <div>
-            <h4 className="mt-1 mb-3">Added Denominations in {userData?.name}'s  {walletData?.name}</h4>
-            {denominationsData?.data && denominationsData.data.length > 0 ? (
+        <div className='border p-2 rounded deposit-style'>
+            <div className='d-flex justify-content-between align-items-center my-2'>
+            <button className='btn btn-warning btn-sm deposit-now-btn'>
+                Deposit now
+            </button>
+            </div>
+           
+            {depositList && depositList.length > 0 ? (
                 <ul className="list-group">
-                    {denominationsData.data.map((denom,index) => (
+                    {depositList.map((denom,index) => (
                         <li key={index} className="list-group-item d-flex justify-content-between align-items-center">                         <strong>{index+1}#{denom.pivot_id}</strong>
                             <span>{denom?.title}({denom?.amount} {currencySymbol}) - Amount: {denom?.pivot?.amount}</span>
 
                             <div className='d-flex gap-2'>
-       
-
-                            <button
-                                type="button"
-                                className="btn btn-success btn-sm"
-                                onClick={() => handleAddToDeposit(denom)}
-                            >
-                                Deposit
-                            </button>
 
 
                             <button
                                 type="button"
                                 className="btn btn-danger btn-sm"
-                                onClick={() => handleRemoveDenomination(denom.pivot_id)}
+                                onClick={() => handleRemoveDeposit(denom.id)}
                             >
                                 Remove
                             </button>
@@ -41,4 +37,4 @@ const DenominationList = ({ denominationsData, handleRemoveDenomination, currenc
     );
 };
 
-export default DenominationList;
+export default DepositDenomination;
