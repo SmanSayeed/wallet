@@ -55,6 +55,7 @@ const RegistrationForm = () => {
    
       if (response.success) {
         setShowAlert(true);
+        setIsSubmitting(false);
         setErrors([])
         // Clear form data if registration is successful
         setFormData({
@@ -155,7 +156,8 @@ const RegistrationForm = () => {
           {isSubmitting ? 'Registering...' : 'Register'}
         </button>
         
-      {showAlert && (
+        <div className='my-2'>
+        {showAlert && (
         <Alert
           message="Success! Check email for verification message"
           variant="primary"
@@ -163,6 +165,8 @@ const RegistrationForm = () => {
           onClose={handleClose}
         />
       )}
+        </div>
+     
       </form>
     </div>
     </AuthLayout>

@@ -1,11 +1,12 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useLoginMutation } from '@/app/services/authApi';
 import { useRouter } from 'next/navigation';
 import AuthLayout from '../AuthLayout';
 import Alert from '@/app/Components/Atoms/Alert/Alert';
 import { setCredentials } from '@/app/redux/features/auth/authSlice';
+import { useSearchParams } from 'next/navigation'
 
 const LoginForm = () => {
   const [formData, setFormData] = useState({
@@ -13,10 +14,21 @@ const LoginForm = () => {
     password: '',
   });
 
-  const [error, setError] = useState(null); // State to store login error
+  const [error, setError] = useState(null);
+  const [message,setMessage]=useState(null);
   const dispatch = useDispatch();
   const router = useRouter();
   const [login, { isLoading }] = useLoginMutation();
+
+  const searchParams = useSearchParams()
+ 
+  const queryParamMessage = searchParams.get('message')
+
+  useEffect(() => {
+    if (queryParamMessage) {
+      setMessage(queryParamMessage);
+    }
+  }, [queryParamMessage]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -50,6 +62,7 @@ const LoginForm = () => {
       <div className="container my-5 shadow-lg border rounded p-3">
         <h2>Login</h2>
         {error && <Alert message={error} variant="danger" dismissible={true} />}
+        {message && <Alert message={message} variant="success" dismissible={true} />}
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
             <label htmlFor="email" className="form-label">Email</label>
