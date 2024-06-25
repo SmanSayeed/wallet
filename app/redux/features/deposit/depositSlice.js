@@ -19,7 +19,7 @@ const depositSlice = createSlice({
     },
     removeDeposit: (state, action) => {
       state.depositList = state.depositList.filter(
-        (deposit) => deposit.id !== action.payload
+        (deposit) => deposit.pivot_id !== action.payload
       );
     },
     clearDeposits: (state) => {

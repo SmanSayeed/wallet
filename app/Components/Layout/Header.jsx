@@ -28,6 +28,9 @@ const Header = () => {
   const handleWallet = () => {
     router.push('/wallet');
   };
+  const handleHistory = () => {
+    router.push('/history');
+  };
 
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -46,6 +49,9 @@ const Header = () => {
               </>
             ) : (
               <>
+               <li className="nav-item">
+                <button className="nav-link btn btn-link" onClick={handleHistory}>History</button>
+              </li>
                <li className="nav-item">
                 <button className="nav-link btn btn-link" onClick={handleWallet}>Wallets</button>
               </li>

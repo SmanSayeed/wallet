@@ -21,7 +21,7 @@ const DepositDenomination = ({ depositList, currencySymbol,userData,walletData,h
                             <button
                                 type="button"
                                 className="btn btn-danger btn-sm"
-                                onClick={() => handleRemoveDeposit(denom.id)}
+                                onClick={() => handleRemoveDeposit(denom.pivot_id)}
                             >
                                 Remove
                             </button>
